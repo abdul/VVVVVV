@@ -1,7 +1,11 @@
 # CMake File for VVVVVV
 # Written by Ethan "flibitijibibo" Lee
 
+# Set the cmake minimum version to 2.8.12
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
+
+# Add SDL2 CMake modules
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 # Architecture Flags
 IF(APPLE)
@@ -11,7 +15,7 @@ IF(APPLE)
 		SET(CMAKE_OSX_SYSROOT ${OSX_10_9_SDK_PATH})
 	ELSE()
 		MESSAGE(WARNING "macOS 10.9 SDK not found - proceeding with the default SDK. This may cause issues!")
-		SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk)
+		#SET(CMAKE_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk)
 	ENDIF()
 	MESSAGE(STATUS "Using macOS SDK at ${CMAKE_OSX_SYSROOT}")
 	SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
@@ -131,6 +135,13 @@ else()
 		target_link_libraries(vvvvvv ${SDL2_LIBRARIES} SDL2_mixer)
 	endif()
 endif()
+
+# Add SDL2 library
+find_package(SDL2 REQUIRED)
+target_link_libraries(vvvvvv SDL2::Main)
+# Add SDL2_mixer library
+find_package(SDL2_mixer REQUIRED)
+target_link_libraries(vvvvvv SDL2::Mixer)
 
 # Yes, more Apple Crap
 IF(APPLE)
